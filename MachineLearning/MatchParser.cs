@@ -88,7 +88,7 @@
             }
         }
 
-        public SeasonData Build()
+        public MatchPredictor Build()
         {
             var engine = REngine.GetInstance();
             var y = engine.CreateNumericVector(this.Y);
@@ -108,7 +108,7 @@
                         Defence = Convert.ToDouble(p[i + 20, 0])
                     });
 
-            return new SeasonData(teams, Convert.ToDouble(p[2 * this.NumberOfTeams, 0]));
+            return new MatchPredictor(teams, Convert.ToDouble(p[2 * this.NumberOfTeams, 0]));
         }
 
         public T[,] ResizeArray<T>(T[,] original, int[] columnsToRemove)
