@@ -16,7 +16,7 @@ namespace MachineLearning
         public static void Main(string[] args)
         {
             var webClient = new WebClient();
-            var fileData = webClient.DownloadString("http://elysiantech.co.uk:3000/Results1617header.csv");
+            var fileData = webClient.DownloadString("http://elysiantech.co.uk:3000/Results1516header.csv");
             using (var sr = new StringReader(fileData))
             {
                 var reader = new CsvReader(sr);
@@ -37,7 +37,12 @@ namespace MachineLearning
             Console.WriteLine("5: Compare Results");
             var decision = Console.ReadLine();
             if (decision == "1") ScoreAndWinPrediction();
-            else if (decision == "5") CompareResults();
+            else if (decision == "5")
+            {
+                Console.WriteLine("set threshold value:");
+                double threshold = Convert.ToDouble(Console.ReadLine());
+                CompareResults(threshold);
+            }
             Options();
         }
 
@@ -63,7 +68,7 @@ namespace MachineLearning
 
         }
 
-        public static void CompareResults()
+        public static void CompareResults(double threshold)
         {
             var correct = 0;
             foreach (var match in records)
@@ -84,12 +89,10 @@ namespace MachineLearning
                 var homescore = match.HomeScore;
                 var awayscore = match.AwayScore;
 
-                var threshold = 3;
-
-                if (pct.Home > (pct.Away + threshold))
+                if (pct.Home > (pct.Away + threshold) && pct.Home > (pct.Draw + threshold))
                 {
-                    // home win
                     Console.WriteLine(home + " win");
+
                     if (homescore > awayscore)
                     {
                         Console.WriteLine("correct");
@@ -98,10 +101,10 @@ namespace MachineLearning
                     else
                         Console.WriteLine("wrong");
                 }
-                else if (pct.Away > (pct.Home + threshold))
+                else if (pct.Away > (pct.Home + threshold) && pct.Away > (pct.Draw + threshold))
                 {
-                    //away win
                     Console.WriteLine(away + " win");
+
                     if (awayscore > homescore)
                     {
                         Console.WriteLine("correct");
@@ -112,8 +115,8 @@ namespace MachineLearning
                 }
                 else
                 {
-                    //draw
                     Console.WriteLine("draw");
+
                     if (homescore == awayscore)
                     {
                         Console.WriteLine("correct");
