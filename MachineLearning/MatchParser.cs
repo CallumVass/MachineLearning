@@ -105,7 +105,7 @@
                 {
                     Team = t, 
                     Attack = Convert.ToDouble(p[i, 0]), 
-                    Defence = Convert.ToDouble(p[i + 20, 0])
+                    Defence = Convert.ToDouble(p[i + this.NumberOfTeams, 0])
                 });
 
             return new MatchPredictor(teams, Convert.ToDouble(p[2 * this.NumberOfTeams, 0]));

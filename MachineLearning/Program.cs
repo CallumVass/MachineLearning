@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MachineLearning
 {
@@ -11,6 +12,7 @@ namespace MachineLearning
     public class Program
     {
         private static MatchPredictor data;
+        private static List<Match> records;
         public static void Main(string[] args)
         {
             var webClient = new WebClient();
@@ -18,7 +20,7 @@ namespace MachineLearning
             using (var sr = new StringReader(fileData))
             {
                 var reader = new CsvReader(sr);
-                var records = reader.GetRecords<Match>().ToList();
+                records = reader.GetRecords<Match>().ToList();
                 var parser = new MatchParser(records);
                 data = parser.Build();
                 Options();
@@ -31,8 +33,11 @@ namespace MachineLearning
             Console.WriteLine("1: Score and Win Prediction");
             Console.WriteLine("2: ");
             Console.WriteLine("3: ");
+            Console.WriteLine("4: ");
+            Console.WriteLine("5: Compare Results");
            var decision = Console.ReadLine();
            if (decision == "1") ScoreAndWinPrediction();
+           else if (decision == "5") CompareResults();
             Options();
         }
 
@@ -56,6 +61,63 @@ namespace MachineLearning
             Console.WriteLine("------------------------");
             Console.WriteLine(" ");
             
+        }
+
+        public static void CompareResults()
+        {
+            var correct = 0;
+            foreach (var match in records)
+            {
+                var home = match.HomeTeam;
+                var away = match.AwayTeam;
+                
+                var probs = data.ProbabilityTable(home, away);
+                var pct = data.ResultProbability(probs);
+
+                var highest = data.FindHighestAsString(probs);
+
+                Console.WriteLine(" ");
+                Console.WriteLine("------------------------");
+                Console.WriteLine(string.Format("{0}: {1}%, {2}: {3}%, {4}: {5}%", home, pct.Home, away, pct.Away,
+                    "draw", pct.Draw));
+                var homescore = match.HomeScore;
+                var awayscore = match.AwayScore;
+
+                if (homescore > awayscore)
+                {
+                    Console.WriteLine(home + " win");
+                    if (pct.Home > pct.Away && pct.Home > pct.Draw)
+                    {
+                        correct++;
+                        Console.WriteLine("Correct");
+                    }
+                    else Console.WriteLine("Wrong");
+                }
+                else if (homescore == awayscore)
+                {
+                    Console.WriteLine("Draw");
+                    if (pct.Draw > pct.Away && pct.Draw > pct.Home)
+                    {
+                        correct++;
+                        Console.WriteLine("Correct");
+                    }
+                    else Console.WriteLine("Wrong");
+                }
+                else
+                {
+                    Console.WriteLine(away + " win");
+                    if (pct.Away > pct.Home && pct.Away > pct.Draw)
+                    {
+                        correct++;
+                        Console.WriteLine("Correct");
+                    }
+                    else Console.WriteLine("Wrong");
+                }
+                Console.WriteLine("------------------------");
+                Console.WriteLine(" ");
+            }
+
+            Console.WriteLine(correct + " out of " + records.Count);
         }
     }
 }
