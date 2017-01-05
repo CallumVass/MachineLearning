@@ -16,7 +16,7 @@ namespace MachineLearning
         public static void Main(string[] args)
         {
             var webClient = new WebClient();
-            var fileData = webClient.DownloadString("http://elysiantech.co.uk:3000/Results1516header.csv");
+            var fileData = webClient.DownloadString("http://elysiantech.co.uk:3000/Results1617header.csv");
             using (var sr = new StringReader(fileData))
             {
                 var reader = new CsvReader(sr);
@@ -87,7 +87,7 @@ namespace MachineLearning
                 if (homescore > awayscore)
                 {
                     Console.WriteLine(home + " win");
-                    if (pct.Home > pct.Away && pct.Home > pct.Draw)
+                    if (pct.Home > 40)
                     {
                         correct++;
                         Console.WriteLine("Correct");
@@ -97,7 +97,7 @@ namespace MachineLearning
                 else if (homescore == awayscore)
                 {
                     Console.WriteLine("Draw");
-                    if (pct.Draw > pct.Away && pct.Draw > pct.Home)
+                    if (pct.Draw >40)
                     {
                         correct++;
                         Console.WriteLine("Correct");
@@ -107,7 +107,7 @@ namespace MachineLearning
                 else
                 {
                     Console.WriteLine(away + " win");
-                    if (pct.Away > pct.Home && pct.Away > pct.Draw)
+                    if (pct.Away > 40)
                     {
                         correct++;
                         Console.WriteLine("Correct");
