@@ -86,6 +86,26 @@
             return p;
         }
 
+        public string FindHighestAsString(double[,]dblArray)
+        {
+            var trackHighest = 0.0;
+            var x = 0;
+            var y = 0;
+            for (var j = 0; j < 8; j++)
+            {
+                for (var k = 0; k < 8; k++)
+                {
+                    if (dblArray[j, k] > trackHighest)
+                    {
+                        y = j;
+                        x = k;
+                        trackHighest = dblArray[j, k];
+                    }
+                }
+            }
+            return string.Format("Result: {0}:{1} - {2}%", x,y,trackHighest);
+        }
+
         //public ScoreResult GetScore(string homeTeamName, string awayTeamName)
         //{
         //    var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);

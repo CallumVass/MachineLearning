@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MachineLearning
 {
@@ -20,15 +21,18 @@ namespace MachineLearning
                 var records = reader.GetRecords<Match>().ToList();
                 var parser = new MatchParser(records);
                 var data = parser.Build();
-                //Console.WriteLine("Please enter a home team: ");
-                //var home = Console.ReadLine();
-                //Console.WriteLine("Please enter an away team: ");
-                //var away = Console.ReadLine();
+                Console.WriteLine("Please enter a home team: ");
+                var home = Console.ReadLine();
+                Console.WriteLine("Please enter an away team: ");
+                var away = Console.ReadLine();
                 //var result = data.GetScore(home,away);
-                var probs = data.ProbabilityTable("Man United", "Bournemouth");
+                var probs = data.ProbabilityTable(home, away);
                 var pct = data.ResultProbability(probs);
 
-                Console.WriteLine(pct);
+               var highest = data.FindHighestAsString(probs);
+                Console.WriteLine(highest);
+                Console.WriteLine(string.Format("Home Team: {0}, Away Team: {1}", home, away));
+                Console.WriteLine(pct.ToString());
                 //Console.WriteLine("Home: {0}, Away: {1}", result.HomeTeamScore.Result, result.AwayTeamScore.Result);
                 Console.ReadLine();
             }
