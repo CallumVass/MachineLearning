@@ -18,6 +18,33 @@
             this.homeAdvantage = homeAdvantage;
         }
 
+        public double[,] ProbabilityTable(string homeTeamName, string awayTeamName)
+        {
+            var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
+            var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
+            var lambdaa = Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage);
+            var lambdab = Math.Exp(awayTeam.Attack - homeTeam.Defence);
+            var arraya = new List<double>();
+            var arrayb = new List<double>();
+
+            for (int i = 0; i < 7; i++)
+            {
+                arraya.Add(Poisson.PMF(lambdaa, i));
+                arrayb.Add(Poisson.PMF(lambdab,i));
+            }
+            arraya.Add(1-arraya.Sum());
+            arrayb.Add(1-arrayb.Sum());
+            var dblArray = new double[8,8];
+            for (var j = 0; j < 8; j++)
+            {
+                for (var k = 0; k < 8; k++)
+                {
+                    dblArray[j, k] = (arraya[k]*arrayb[j]) * 100;
+                }
+            }
+            return dblArray;
+        }
+
         public ScoreResult GetScore(string homeTeamName, string awayTeamName)
         {
             var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
