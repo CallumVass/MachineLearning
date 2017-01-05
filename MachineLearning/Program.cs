@@ -80,6 +80,7 @@ namespace MachineLearning
                 Console.WriteLine("------------------------");
                 Console.WriteLine(string.Format("{0}: {1}%, {2}: {3}%, {4}: {5}%", home, pct.Home, away, pct.Away,
                     "draw", pct.Draw));
+                Console.WriteLine(string.Format("Likeliest Result: {0}", highest));
                 var homescore = match.HomeScore;
                 var awayscore = match.AwayScore;
 
@@ -116,8 +117,8 @@ namespace MachineLearning
                 Console.WriteLine("------------------------");
                 Console.WriteLine(" ");
             }
-
-            Console.WriteLine(correct + " out of " + records.Count);
+            var pctage = (((double)correct / (double)records.Count)*100);
+            Console.WriteLine(string.Format("{0} out of {1} ({2}%)", correct, records.Count, pctage));
         }
     }
 }
