@@ -35,7 +35,7 @@
 
             arraya.Add(1 - arraya.Sum());
             arrayb.Add(1 - arrayb.Sum());
-            var dblArray = new double[iterations+1, iterations+1];
+            var dblArray = new double[iterations + 1, iterations + 1];
 
             for (var j = 0; j < dblArray.GetLength(0); j++)
             {
@@ -106,22 +106,5 @@
 
             return string.Format("{0}:{1} - {2}%", x, y, trackHighest);
         }
-
-        // public ScoreResult GetScore(string homeTeamName, string awayTeamName)
-        // {
-        // var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
-        // var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
-
-        // // Need to wrap rpois
-        // var homeResult = Poisson.Sample(Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage));
-        // var awayResult = Poisson.Sample(Math.Exp(awayTeam.Attack - homeTeam.Defence));
-
-        // // Need to return an object here with Home Result, Away Result, End Result
-        // return new ScoreResult
-        // {
-        // HomeTeamScore = new Score(homeTeam, homeResult),
-        // AwayTeamScore = new Score(awayTeam, awayResult)
-        // };
-        // }
     }
 }
