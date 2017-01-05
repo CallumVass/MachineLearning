@@ -104,7 +104,7 @@
                 }
             }
 
-            return string.Format("Result: {0}:{1} - {2}%", x, y, trackHighest);
+            return string.Format("{0}:{1} - {2}%", x, y, trackHighest);
         }
 
         // public ScoreResult GetScore(string homeTeamName, string awayTeamName)

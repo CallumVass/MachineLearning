@@ -10,7 +10,7 @@ namespace MachineLearning
 
     public class Program
     {
-        public static void Main(string[] args)
+       public static void Main(string[] args)
         {
             var webClient = new WebClient();
             var fileData = webClient.DownloadString("http://elysiantech.co.uk:3000/Results1516header.csv");
@@ -29,12 +29,15 @@ namespace MachineLearning
                 var pct = data.ResultProbability(probs);
 
                 var highest = data.FindHighestAsString(probs);
-                Console.WriteLine(highest);
-                Console.WriteLine("Home Team: {0}, Away Team: {1}", home, away);
-                Console.WriteLine(pct.ToString());
-                //Console.WriteLine("Home: {0}, Away: {1}", result.HomeTeamScore.Result, result.AwayTeamScore.Result);
+
+                Console.WriteLine(" ");
+                Console.WriteLine("------------------------");
+                Console.WriteLine(string.Format("{0}: {1}%, {2}: {3}%, {4}: {5}%", home, pct.Home, away, pct.Away, "draw", pct.Draw));
+                Console.WriteLine(string.Format("Likeliest Result: {0}", highest));
+                Console.WriteLine("------------------------");
+                Console.WriteLine(" ");
+
                 Console.ReadLine();
             }
-        }
     }
 }
