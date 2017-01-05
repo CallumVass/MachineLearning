@@ -25,7 +25,10 @@ namespace MachineLearning
                 //Console.WriteLine("Please enter an away team: ");
                 //var away = Console.ReadLine();
                 //var result = data.GetScore(home,away);
-                data.ProbabilityTable("Man United", "Bournemouth");
+                var probs = data.ProbabilityTable("Man United", "Bournemouth");
+                var pct = data.ResultProbability(probs);
+
+                Console.WriteLine(pct);
                 //Console.WriteLine("Home: {0}, Away: {1}", result.HomeTeamScore.Result, result.AwayTeamScore.Result);
                 Console.ReadLine();
             }

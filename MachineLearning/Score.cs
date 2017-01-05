@@ -16,7 +16,7 @@
         {
             get
             {
-                return this.team;
+                return team;
             }
         }
 
@@ -24,7 +24,7 @@
         {
             get
             {
-                return this.result;
+                return result;
             }
         }
     }

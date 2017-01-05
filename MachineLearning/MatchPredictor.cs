@@ -20,14 +20,14 @@
 
         public double[,] ProbabilityTable(string homeTeamName, string awayTeamName)
         {
-            var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
-            var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
-            var lambdaa = Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage);
+            var homeTeam = teams.FirstOrDefault(t => t.Team == homeTeamName);
+            var awayTeam = teams.FirstOrDefault(t => t.Team == awayTeamName);
+            var lambdaa = Math.Exp(homeTeam.Attack - awayTeam.Defence + homeAdvantage);
             var lambdab = Math.Exp(awayTeam.Attack - homeTeam.Defence);
             var arraya = new List<double>();
             var arrayb = new List<double>();
 
-            for (int i = 0; i < 7; i++)
+            for (var i = 0; i < 7; i++)
             {
                 arraya.Add(Poisson.PMF(lambdaa, i));
                 arrayb.Add(Poisson.PMF(lambdab,i));
@@ -45,21 +45,62 @@
             return dblArray;
         }
 
-        public ScoreResult GetScore(string homeTeamName, string awayTeamName)
+ 
+
+        public Probabilities ResultProbability(double[,] probs)
         {
-            var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
-            var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
-
-            // Need to wrap rpois
-            var homeResult = Poisson.Sample(Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage));
-            var awayResult = Poisson.Sample(Math.Exp(awayTeam.Attack - homeTeam.Defence));
-
-            // Need to return an object here with Home Result, Away Result, End Result
-            return new ScoreResult
+            var home = 0.0;
+            var away = 0.0;
+            var draw = 0.0;
+            
+            for (var i = 0; i < 8; i++)
             {
-                HomeTeamScore = new Score(homeTeam, homeResult),
-                AwayTeamScore = new Score(awayTeam, awayResult)
+                for (var j = 0; j < 8; j++)
+                {
+                    if (i > j)
+                    {
+                        away = away + probs[i, j];
+                    }
+                    else
+                    {
+                        if (i == j)
+                        {
+                            draw = draw + probs[i, j];
+                        }
+                        else
+                        {
+                            home = home + probs[i, j];
+                        }
+                    }
+                   
+                }
+            }
+
+            var p = new Probabilities
+            {
+                Home = home,
+                Away = away,
+                Draw = draw
             };
+
+            return p;
         }
+
+        //public ScoreResult GetScore(string homeTeamName, string awayTeamName)
+        //{
+        //    var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
+        //    var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
+
+        //    // Need to wrap rpois
+        //    var homeResult = Poisson.Sample(Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage));
+        //    var awayResult = Poisson.Sample(Math.Exp(awayTeam.Attack - homeTeam.Defence));
+
+        //    // Need to return an object here with Home Result, Away Result, End Result
+        //    return new ScoreResult
+        //    {
+        //        HomeTeamScore = new Score(homeTeam, homeResult),
+        //        AwayTeamScore = new Score(awayTeam, awayResult)
+        //    };
+        //}
     }
 }
