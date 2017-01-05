@@ -96,7 +96,7 @@
             var xx = engine.CreateNumericMatrix(this.XX);
             engine.SetSymbol("xx", xx);
             engine.Evaluate("parameters <- glm(formula = y ~ 0 + xx, family = poisson)").AsVector().ToArray();
-            var z = engine.Evaluate("c(0, coefficients(parameters))");
+            var z = engine.Evaluate("z <- c(0, coefficients(parameters))");
             var p = z.AsNumericMatrix();
 
             var teams = this.Teams.Select(

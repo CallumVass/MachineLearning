@@ -20,10 +20,12 @@ namespace MachineLearning
                 var records = reader.GetRecords<Match>().ToList();
                 var parser = new MatchParser(records);
                 var data = parser.Build();
-                var result = data.GetScore("Arsenal", "Aston Villa");
-
+                Console.WriteLine("Please enter a home team: ");
+                var home = Console.ReadLine();
+                Console.WriteLine("Please enter an away team: ");
+                var away = Console.ReadLine();
+                var result = data.GetScore(home,away);
                 Console.WriteLine("Home: {0}, Away: {1}", result.HomeTeamScore.Result, result.AwayTeamScore.Result);
-
                 Console.ReadLine();
             }
         }
