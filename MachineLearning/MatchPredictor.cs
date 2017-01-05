@@ -35,7 +35,7 @@
 
             arraya.Add(1 - arraya.Sum());
             arrayb.Add(1 - arrayb.Sum());
-            var dblArray = new double[8, 8];
+            var dblArray = new double[iterations+1, iterations+1];
 
             for (var j = 0; j < dblArray.GetLength(0); j++)
             {
