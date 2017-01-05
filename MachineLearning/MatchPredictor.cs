@@ -18,7 +18,7 @@
             this.homeAdvantage = homeAdvantage;
         }
 
-        public double[,] ProbabilityTable(string homeTeamName, string awayTeamName, int iterations = 100)
+        public double[,] ProbabilityTable(string homeTeamName, string awayTeamName, int iterations = 10)
         {
             var homeTeam = this.teams.First(t => t.Team == homeTeamName);
             var awayTeam = this.teams.First(t => t.Team == awayTeamName);

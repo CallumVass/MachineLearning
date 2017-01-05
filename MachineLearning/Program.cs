@@ -35,9 +35,9 @@ namespace MachineLearning
             Console.WriteLine("3: ");
             Console.WriteLine("4: ");
             Console.WriteLine("5: Compare Results");
-           var decision = Console.ReadLine();
-           if (decision == "1") ScoreAndWinPrediction();
-           else if (decision == "5") CompareResults();
+            var decision = Console.ReadLine();
+            if (decision == "1") ScoreAndWinPrediction();
+            else if (decision == "5") CompareResults();
             Options();
         }
 
@@ -60,7 +60,7 @@ namespace MachineLearning
             Console.WriteLine(string.Format("Likeliest Result: {0}", highest));
             Console.WriteLine("------------------------");
             Console.WriteLine(" ");
-            
+
         }
 
         public static void CompareResults()
@@ -70,7 +70,7 @@ namespace MachineLearning
             {
                 var home = match.HomeTeam;
                 var away = match.AwayTeam;
-                
+
                 var probs = data.ProbabilityTable(home, away);
                 var pct = data.ResultProbability(probs);
 
@@ -84,40 +84,79 @@ namespace MachineLearning
                 var homescore = match.HomeScore;
                 var awayscore = match.AwayScore;
 
-                if (homescore > awayscore)
+                var threshold = 3;
+
+                if (pct.Home > (pct.Away + threshold))
                 {
+                    // home win
                     Console.WriteLine(home + " win");
-                    if (pct.Home > 35)
+                    if (homescore > awayscore)
                     {
+                        Console.WriteLine("correct");
                         correct++;
-                        Console.WriteLine("Correct");
                     }
-                    else Console.WriteLine("Wrong");
+                    else
+                        Console.WriteLine("wrong");
                 }
-                else if (homescore == awayscore)
+                else if (pct.Away > (pct.Home + threshold))
                 {
-                    Console.WriteLine("Draw");
-                    if (pct.Draw >35)
+                    //away win
+                    Console.WriteLine(away + " win");
+                    if (awayscore > homescore)
                     {
+                        Console.WriteLine("correct");
                         correct++;
-                        Console.WriteLine("Correct");
                     }
-                    else Console.WriteLine("Wrong");
+                    else
+                        Console.WriteLine("wrong");
                 }
                 else
                 {
-                    Console.WriteLine(away + " win");
-                    if (pct.Away > 35)
+                    //draw
+                    Console.WriteLine("draw");
+                    if (homescore == awayscore)
                     {
+                        Console.WriteLine("correct");
                         correct++;
-                        Console.WriteLine("Correct");
                     }
-                    else Console.WriteLine("Wrong");
+                    else
+                        Console.WriteLine("wrong");
                 }
+
+                //if (homescore > awayscore)
+                //{
+                //    Console.WriteLine(home + " win");
+                //    if (pct.Home > threshold)
+                //    {
+                //        correct++;
+                //        Console.WriteLine("Correct");
+                //    }
+                //    else Console.WriteLine("Wrong");
+                //}
+                //else if (homescore == awayscore)
+                //{
+                //    Console.WriteLine("Draw");
+                //    if (pct.Draw > threshold)
+                //    {
+                //        correct++;
+                //        Console.WriteLine("Correct");
+                //    }
+                //    else Console.WriteLine("Wrong");
+                //}
+                //else
+                //{
+                //    Console.WriteLine(away + " win");
+                //    if (pct.Away > threshold)
+                //    {
+                //        correct++;
+                //        Console.WriteLine("Correct");
+                //    }
+                //    else Console.WriteLine("Wrong");
+                //}
                 Console.WriteLine("------------------------");
                 Console.WriteLine(" ");
             }
-            var pctage = (((double)correct / (double)records.Count)*100);
+            var pctage = (((double)correct / (double)records.Count) * 100);
             Console.WriteLine(string.Format("{0} out of {1} ({2}%)", correct, records.Count, pctage));
         }
     }
