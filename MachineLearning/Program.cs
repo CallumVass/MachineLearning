@@ -87,7 +87,7 @@ namespace MachineLearning
                 if (homescore > awayscore)
                 {
                     Console.WriteLine(home + " win");
-                    if (pct.Home > 40)
+                    if (pct.Home > 35)
                     {
                         correct++;
                         Console.WriteLine("Correct");
@@ -97,7 +97,7 @@ namespace MachineLearning
                 else if (homescore == awayscore)
                 {
                     Console.WriteLine("Draw");
-                    if (pct.Draw >40)
+                    if (pct.Draw >35)
                     {
                         correct++;
                         Console.WriteLine("Correct");
@@ -107,7 +107,7 @@ namespace MachineLearning
                 else
                 {
                     Console.WriteLine(away + " win");
-                    if (pct.Away > 40)
+                    if (pct.Away > 35)
                     {
                         correct++;
                         Console.WriteLine("Correct");
