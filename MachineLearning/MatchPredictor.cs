@@ -18,44 +18,45 @@
             this.homeAdvantage = homeAdvantage;
         }
 
-        public double[,] ProbabilityTable(string homeTeamName, string awayTeamName)
+        public double[,] ProbabilityTable(string homeTeamName, string awayTeamName, int iterations = 100)
         {
-            var homeTeam = teams.FirstOrDefault(t => t.Team == homeTeamName);
-            var awayTeam = teams.FirstOrDefault(t => t.Team == awayTeamName);
-            var lambdaa = Math.Exp(homeTeam.Attack - awayTeam.Defence + homeAdvantage);
+            var homeTeam = this.teams.First(t => t.Team == homeTeamName);
+            var awayTeam = this.teams.First(t => t.Team == awayTeamName);
+            var lambdaa = Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage);
             var lambdab = Math.Exp(awayTeam.Attack - homeTeam.Defence);
             var arraya = new List<double>();
             var arrayb = new List<double>();
 
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < iterations; i++)
             {
                 arraya.Add(Poisson.PMF(lambdaa, i));
-                arrayb.Add(Poisson.PMF(lambdab,i));
+                arrayb.Add(Poisson.PMF(lambdab, i));
             }
-            arraya.Add(1-arraya.Sum());
-            arrayb.Add(1-arrayb.Sum());
-            var dblArray = new double[8,8];
-            for (var j = 0; j < 8; j++)
+
+            arraya.Add(1 - arraya.Sum());
+            arrayb.Add(1 - arrayb.Sum());
+            var dblArray = new double[8, 8];
+
+            for (var j = 0; j < dblArray.GetLength(0); j++)
             {
-                for (var k = 0; k < 8; k++)
+                for (var k = 0; k < dblArray.GetLength(1); k++)
                 {
-                    dblArray[j, k] = (arraya[k]*arrayb[j]) * 100;
+                    dblArray[j, k] = (arraya[k] * arrayb[j]) * 100;
                 }
             }
+
             return dblArray;
         }
-
- 
 
         public Probabilities ResultProbability(double[,] probs)
         {
             var home = 0.0;
             var away = 0.0;
             var draw = 0.0;
-            
-            for (var i = 0; i < 8; i++)
+
+            for (var i = 0; i < probs.GetLength(0); i++)
             {
-                for (var j = 0; j < 8; j++)
+                for (var j = 0; j < probs.GetLength(1); j++)
                 {
                     if (i > j)
                     {
@@ -72,7 +73,6 @@
                             home = home + probs[i, j];
                         }
                     }
-                   
                 }
             }
 
@@ -86,14 +86,14 @@
             return p;
         }
 
-        public string FindHighestAsString(double[,]dblArray)
+        public string FindHighestAsString(double[,] dblArray)
         {
             var trackHighest = 0.0;
             var x = 0;
             var y = 0;
-            for (var j = 0; j < 8; j++)
+            for (var j = 0; j < dblArray.GetLength(0); j++)
             {
-                for (var k = 0; k < 8; k++)
+                for (var k = 0; k < dblArray.GetLength(1); k++)
                 {
                     if (dblArray[j, k] > trackHighest)
                     {
@@ -103,24 +103,25 @@
                     }
                 }
             }
-            return string.Format("Result: {0}:{1} - {2}%", x,y,trackHighest);
+
+            return string.Format("Result: {0}:{1} - {2}%", x, y, trackHighest);
         }
 
-        //public ScoreResult GetScore(string homeTeamName, string awayTeamName)
-        //{
-        //    var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
-        //    var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
+        // public ScoreResult GetScore(string homeTeamName, string awayTeamName)
+        // {
+        // var homeTeam = this.teams.FirstOrDefault(t => t.Team == homeTeamName);
+        // var awayTeam = this.teams.FirstOrDefault(t => t.Team == awayTeamName);
 
-        //    // Need to wrap rpois
-        //    var homeResult = Poisson.Sample(Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage));
-        //    var awayResult = Poisson.Sample(Math.Exp(awayTeam.Attack - homeTeam.Defence));
+        // // Need to wrap rpois
+        // var homeResult = Poisson.Sample(Math.Exp(homeTeam.Attack - awayTeam.Defence + this.homeAdvantage));
+        // var awayResult = Poisson.Sample(Math.Exp(awayTeam.Attack - homeTeam.Defence));
 
-        //    // Need to return an object here with Home Result, Away Result, End Result
-        //    return new ScoreResult
-        //    {
-        //        HomeTeamScore = new Score(homeTeam, homeResult),
-        //        AwayTeamScore = new Score(awayTeam, awayResult)
-        //    };
-        //}
+        // // Need to return an object here with Home Result, Away Result, End Result
+        // return new ScoreResult
+        // {
+        // HomeTeamScore = new Score(homeTeam, homeResult),
+        // AwayTeamScore = new Score(awayTeam, awayResult)
+        // };
+        // }
     }
 }

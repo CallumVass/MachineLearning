@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 
 namespace MachineLearning
 {
@@ -29,9 +28,9 @@ namespace MachineLearning
                 var probs = data.ProbabilityTable(home, away);
                 var pct = data.ResultProbability(probs);
 
-               var highest = data.FindHighestAsString(probs);
+                var highest = data.FindHighestAsString(probs);
                 Console.WriteLine(highest);
-                Console.WriteLine(string.Format("Home Team: {0}, Away Team: {1}", home, away));
+                Console.WriteLine("Home Team: {0}, Away Team: {1}", home, away);
                 Console.WriteLine(pct.ToString());
                 //Console.WriteLine("Home: {0}, Away: {1}", result.HomeTeamScore.Result, result.AwayTeamScore.Result);
                 Console.ReadLine();

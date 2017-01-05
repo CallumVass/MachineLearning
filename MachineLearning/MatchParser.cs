@@ -20,8 +20,8 @@
             get
             {
                 var teams = new List<string>();
-                teams.AddRange(matches.Select(e => e.HomeTeam));
-                teams.AddRange(matches.Select(e => e.AwayTeam));
+                teams.AddRange(this.matches.Select(e => e.HomeTeam));
+                teams.AddRange(this.matches.Select(e => e.AwayTeam));
                 return teams.Distinct().OrderBy(t => t).ToArray();
             }
         }
@@ -30,7 +30,7 @@
         {
             get
             {
-                return Teams.Length;
+                return this.Teams.Length;
             }
         }
 
@@ -38,7 +38,7 @@
         {
             get
             {
-                return matches.Count();
+                return this.matches.Count();
             }
         }
 
@@ -47,7 +47,7 @@
             get
             {
                 var results = new List<double>();
-                foreach (var match in matches)
+                foreach (var match in this.matches)
                 {
                     results.Add(match.HomeScore);
                     results.Add(match.AwayScore);
@@ -61,17 +61,17 @@
         {
             get
             {
-                var meh = new double[(2 * NumberOfGames), ((2 * NumberOfTeams) + 1)];
-                for (var i = 0; i < NumberOfGames; i++)
+                var meh = new double[(2 * this.NumberOfGames), ((2 * this.NumberOfTeams) + 1)];
+                for (var i = 0; i < this.NumberOfGames; i++)
                 {
-                    var match = matches.ElementAt(i);
-                    var m = Array.IndexOf(Teams, match.HomeTeam);
-                    var n = Array.IndexOf(Teams, match.AwayTeam);
+                    var match = this.matches.ElementAt(i);
+                    var m = Array.IndexOf(this.Teams, match.HomeTeam);
+                    var n = Array.IndexOf(this.Teams, match.AwayTeam);
                     meh[2 * i, m] = 1;
-                    meh[2 * i, n + NumberOfTeams] = -1;
+                    meh[2 * i, n + this.NumberOfTeams] = -1;
                     meh[(2 * i) + 1, n] = 1;
-                    meh[(2 * i) + 1, m + NumberOfTeams] = -1;
-                    meh[2 * i, 2 * NumberOfTeams] = 1;
+                    meh[(2 * i) + 1, m + this.NumberOfTeams] = -1;
+                    meh[2 * i, 2 * this.NumberOfTeams] = 1;
                 }
 
                 return meh;
@@ -83,7 +83,7 @@
             get
             {
                 int[] indices = { 0 };
-                var meh = ResizeArray(X, indices);
+                var meh = ArrayHelper.ResizeArray(this.X, indices);
                 return meh;
             }
         }
@@ -91,44 +91,24 @@
         public MatchPredictor Build()
         {
             var engine = REngine.GetInstance();
-            var y = engine.CreateNumericVector(Y);
+            var y = engine.CreateNumericVector(this.Y);
             engine.SetSymbol("y", y);
-            var xx = engine.CreateNumericMatrix(XX);
+            var xx = engine.CreateNumericMatrix(this.XX);
             engine.SetSymbol("xx", xx);
             engine.Evaluate("parameters <- glm(formula = y ~ 0 + xx, family = poisson)").AsVector().ToArray();
             var z = engine.Evaluate("z <- c(0, coefficients(parameters))");
             var p = z.AsNumericMatrix();
 
-            var teams = Teams.Select(
+            var teams = this.Teams.Select(
                 (t, i) =>
                 new TeamAdvantage
-                    {
-                        Team = t,
-                        Attack = Convert.ToDouble(p[i, 0]),
-                        Defence = Convert.ToDouble(p[i + 20, 0])
-                    });
-
-            return new MatchPredictor(teams, Convert.ToDouble(p[2 * NumberOfTeams, 0]));
-        }
-
-        public T[,] ResizeArray<T>(T[,] original, int[] columnsToRemove)
-        {
-            var newArray = new T[original.GetLength(0), original.GetLength(1) - columnsToRemove.Length];
-            int minRows = original.GetLength(0);
-            for (int i = 0; i < minRows; i++)
-            {
-                int currentColumn = 0;
-                for (int j = 0; j < original.GetLength(1); j++)
                 {
-                    if (columnsToRemove.Contains(j) == false)
-                    {
-                        newArray[i, currentColumn] = original[i, j];
-                        currentColumn++;
-                    }
-                }
-            }
+                    Team = t, 
+                    Attack = Convert.ToDouble(p[i, 0]), 
+                    Defence = Convert.ToDouble(p[i + 20, 0])
+                });
 
-            return newArray;
+            return new MatchPredictor(teams, Convert.ToDouble(p[2 * this.NumberOfTeams, 0]));
         }
     }
 }
